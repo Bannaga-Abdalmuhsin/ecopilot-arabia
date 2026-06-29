@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase";
-import { useListAssessments } from "@workspace/api-client-react";
+import { useListAssessments, getListAssessmentsQueryKey } from "@workspace/api-client-react";
 import { Link, useLocation } from "wouter";
 import { format } from "date-fns";
 import { useTranslation } from "react-i18next";
@@ -67,7 +67,7 @@ export default function Profile() {
   const [saved, setSaved] = useState(false);
 
   const { data: assessments, isLoading: histLoading } = useListAssessments({
-    query: { enabled: !!user }
+    query: { enabled: !!user, queryKey: getListAssessmentsQueryKey() }
   });
 
   // Redirect guests

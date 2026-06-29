@@ -1,0 +1,348 @@
+EcoPilot Arabia - Complete UI/UX Theme Redesign
+
+I want you to redesign the entire application UI to match the attached logo and create a premium enterprise-grade AI platform for Saudi Arabia.
+
+Brand Personality
+
+The application should feel like a combination of:
+
+Saudi Vision 2030
+NEOM
+SDAIA
+Aramco Digital
+Microsoft Fluent Design
+Apple simplicity
+
+The UI should communicate:
+
+Artificial Intelligence
+Energy
+Sustainability
+Innovation
+Enterprise
+Saudi Identity
+
+Avoid generic green eco templates.
+
+Color Palette
+
+Use colors inspired by the logo.
+
+Primary Green
+
+#006C35
+
+Dark Green
+
+#004B2A
+
+Gold
+
+#C89B3C
+
+Light Gold
+
+#E8C874
+
+Background
+
+#F8FAF9
+
+Cards
+
+#FFFFFF
+
+Dark Text
+
+#1F2937
+
+Secondary Text
+
+#6B7280
+
+Success
+
+#16A34A
+
+Warning
+
+#F59E0B
+
+Danger
+
+#DC2626
+Saudi Identity
+
+Incorporate subtle Saudi-inspired design elements throughout the interface.
+
+Examples:
+
+Soft geometric Islamic patterns in page backgrounds (very low opacity 2–4%)
+Curved shapes inspired by dunes
+Elegant gold accents
+Minimal use of traditional motifs
+No flags
+No camels
+No palm trees
+Modern Saudi aesthetic only
+Glassmorphism
+
+Use soft glass effects.
+
+Cards
+
+blur
+rounded-xl
+subtle shadow
+white transparency
+
+No heavy borders.
+
+Dashboard Style
+
+Large clean dashboard.
+
+Top cards
+
+Energy Score
+Estimated Savings
+Carbon Reduction
+Monthly Bill
+
+Use gradient icons.
+
+AI Style
+
+Every AI-generated section should have a premium appearance.
+
+Use:
+
+✨ AI Generated Report
+
+with a subtle AI icon.
+
+Sidebar
+
+Dark green sidebar.
+
+Hover
+
+Green → Gold transition.
+
+Icons
+
+Lucide Icons only.
+
+Rounded corners.
+
+Buttons
+
+Primary
+
+Green gradient
+
+Hover
+
+Gold glow
+
+Border radius
+
+16px
+
+Soft shadow
+
+Charts
+
+Modern charts.
+
+Rounded corners.
+
+Gradient fills.
+
+Green
+
+Gold
+
+Emerald
+
+Avoid bright colors.
+
+Typography
+
+Font
+
+"Poppins"
+
+Fallback
+
+Inter
+
+Headers
+
+Bold
+
+Body
+
+Medium
+
+Very spacious layout.
+
+Icons
+
+Use Lucide.
+
+Examples
+
+Bolt
+
+Leaf
+
+Brain
+
+Building
+
+Lightbulb
+
+Circuit
+
+BarChart
+
+Shield
+
+TrendingUp
+
+Animations
+
+Very subtle.
+
+Page fade
+
+Card hover
+
+Button hover
+
+Loading shimmer
+
+Progress animation
+
+No excessive motion.
+
+Hero Section
+
+Large heading.
+
+AI-Powered Energy Intelligence
+
+Subtitle
+
+Helping buildings across Saudi Arabia reduce energy consumption using Artificial Intelligence.
+
+Background
+
+Soft green gradient with abstract energy waves.
+
+Energy Score
+
+Circular animated score.
+
+0–100
+
+Green
+
+Gold
+
+Red
+
+Recommendation Cards
+
+Each recommendation should display:
+
+Estimated Savings
+ROI
+Difficulty
+Carbon Reduction
+AI Explanation
+
+Each card has a colored priority indicator.
+
+AI Chat
+
+Looks like ChatGPT.
+
+Floating AI assistant.
+
+Rounded messages.
+
+Typing animation.
+
+Report Page
+
+Looks like a McKinsey consulting report.
+
+Professional sections.
+
+Executive Summary
+
+Findings
+
+Recommendations
+
+Savings
+
+Carbon Impact
+
+Charts
+
+Export PDF
+
+Forms
+
+Minimal.
+
+Rounded.
+
+Floating labels.
+
+Large spacing.
+
+Modern dropdowns.
+
+Background
+
+Very subtle.
+
+Light gradient
+
+White → Light Green
+
+with extremely faint Saudi geometric patterns.
+
+Style References
+
+Use inspiration from
+
+Microsoft Copilot
+Apple
+Linear
+Notion AI
+ChatGPT
+NEOM
+SDAIA
+
+Do NOT copy them.
+
+Only use them as inspiration.
+
+Technical Requirements
+React
+Tailwind CSS
+shadcn/ui
+Framer Motion
+Lucide Icons
+Recharts
+
+Follow a component-based architecture.
+
+Overall Goal
+
+The application should look like a premium AI SaaS platform developed for Saudi Arabia's energy sector—not like a student project. Every screen should reflect innovation, trust, sustainability, and enterprise-grade quality, while staying faithful to the green, gold, and Saudi-inspired identity established by the EcoPilot Arabia logo.

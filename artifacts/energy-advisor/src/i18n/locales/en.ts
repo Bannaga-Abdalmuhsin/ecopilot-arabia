@@ -19,14 +19,33 @@ export const en = {
     signingIn: "Signing in...",
     signingUp: "Signing up...",
     signInError: "Error signing in",
-    signUpError: "Error signing up"
+    signUpError: "Error signing up",
+    welcomeBack: "Welcome back",
+    welcomeSubtitle: "Sign in to access your energy reports",
+    checkEmail: "Check your email",
+    checkEmailDesc: "We sent a confirmation link to {{email}}. Click the link to activate your account.",
+    backToSignIn: "Back to Sign In",
+    termsNote: "By signing in you agree to our Terms & Privacy Policy.",
+    brandSubtitle: "AI-Powered Energy Intelligence for Saudi Arabia's built environment.",
+    features: {
+      aiAnalysis: "AI-Powered Analysis",
+      energyScore: "Instant Energy Score",
+      carbonReport: "Carbon Impact Report"
+    }
   },
   home: {
     hero: {
       badge: "Saudi Arabia Energy Standards",
       title: "Intelligence for",
       titleHighlight: "Energy Efficiency.",
-      subtitle: "Reduce energy consumption, lower costs, and receive personalized AI recommendations in under one minute."
+      subtitle: "Reduce energy consumption, lower costs, and receive personalized AI recommendations in under one minute.",
+      saudiVision: "Saudi Vision 2030",
+      features: {
+        aiAnalysis: "AI-Powered Analysis",
+        carbonImpact: "Carbon Impact",
+        costReduction: "Cost Reduction",
+        saudiStandards: "Saudi Standards"
+      }
     },
     form: {
       step1Title: "Basic Information",
@@ -53,7 +72,8 @@ export const en = {
       back: "Back",
       submit: "Generate Report",
       analyzing: "Analyzing your building...",
-      analyzingDesc: "Our AI consultant is processing your data against Saudi energy standards to generate precise recommendations."
+      analyzingDesc: "Our AI consultant is processing your data against Saudi energy standards to generate precise recommendations.",
+      aiLabel: "AI Energy Assessment"
     },
     consultation: {
       title: "Book a Consultation",
@@ -61,11 +81,13 @@ export const en = {
       emailLabel: "Email",
       whatsappLabel: "WhatsApp",
       phoneLabel: "Phone",
-      description: "Get personalized expert advice."
+      description: "Get personalized expert advice.",
+      badge: "Expert Consultation"
     }
   },
   dashboard: {
     energyScore: "Energy Score",
+    scoreLabel: "Score",
     annualWaste: "Estimated Energy Waste",
     potentialSavings: "Potential Annual Savings",
     carbonReduction: "Carbon Reduction",
@@ -88,14 +110,22 @@ export const en = {
       title: "Ask the AI Consultant",
       placeholder: "Type your question...",
       send: "Send",
-      thinking: "Thinking..."
+      thinking: "Thinking...",
+      prompt: "Ask me anything about your energy report",
+      poweredBy: "Powered by AI"
     },
     exportPdf: "Export PDF",
-    backToForm: "Back to Assessment"
+    backToForm: "Back to Assessment",
+    loading: "Loading your report…",
+    aiGenerated: "AI Generated Report",
+    aiAnalysis: "AI Analysis",
+    reportNotFound: "Report Not Found",
+    reportNotFoundDesc: "The assessment you're looking for doesn't exist or you don't have access."
   },
   history: {
     title: "Assessment History",
     subtitle: "View and compare your past energy efficiency reports.",
+    badge: "Assessment History",
     noHistory: "No assessments yet",
     noHistoryDesc: "You haven't generated any energy reports. Start your first assessment to discover potential savings.",
     viewDashboard: "View Report",
@@ -104,7 +134,8 @@ export const en = {
     score: "Score",
     startAssessment: "Start Assessment",
     signInRequired: "Sign in to view history",
-    signInRequiredDesc: "Your assessment history is saved to your account. Sign in to see all your past assessments."
+    signInRequiredDesc: "Your assessment history is saved to your account. Sign in to see all your past assessments.",
+    loading: "Loading assessments…"
   },
   profile: {
     title: "My Profile",
