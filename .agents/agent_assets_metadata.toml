@@ -11,4 +11,16 @@ title = "ecopilot_bg_music"
 id = "VYjwBlCBjdLhgoPUUWfQF"
 uri = "file://attached_assets/generated_audio/ecopilot_narration.mp3"
 type = "audio"
-title = "ecopilot_demo_narration"
+title = "Demo Narration (Male Voice)"
+
+[[outputs]]
+id = "RtZEYr4LWBYIFQyKsqDYS"
+uri = "file://attached_assets/hero-image.jpg"
+type = "image"
+title = "Hero Image — EcoPilot Arabia"
+
+[[outputs]]
+id = "xx21kDSnpm5PCfw63ST1z"
+uri = "file://attached_assets/hackathon-submission.md"
+type = "text"
+title = "Hackathon Submission Answers"

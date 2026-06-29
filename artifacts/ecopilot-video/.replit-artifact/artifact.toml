@@ -1,0 +1,16 @@
+kind = "video"
+previewPath = "/ecopilot-video"
+title = "EcoPilot Arabia Demo Video"
+version = "1.0.0"
+id = "artifacts/ecopilot-video"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/ecopilot-video" ]
+
+[services.development]
+run = "pnpm --filter @workspace/ecopilot-video run dev"
+
+[services.env]
+BASE_PATH = "/ecopilot-video"

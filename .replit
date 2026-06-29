@@ -11,6 +11,23 @@ env = { "CI" = "true" }
 [workflows]
 runButton = "Project"
 
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "artifacts/ecopilot-video: web"
+
+[[workflows.workflow]]
+name = "artifacts/ecopilot-video: web"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "PORT=5174 BASE_PATH=/ecopilot-video pnpm --filter @workspace/ecopilot-video run dev"
+
 [agent]
 stack = "PNPM_WORKSPACE"
 expertMode = true

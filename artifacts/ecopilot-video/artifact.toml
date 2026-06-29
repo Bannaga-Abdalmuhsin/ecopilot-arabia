@@ -1,0 +1,12 @@
+[artifact]
+id = "artifacts/ecopilot-video"
+kind = "video"
+title = "EcoPilot Arabia Demo Video"
+
+[[artifact.services]]
+id = "web"
+name = "EcoPilot Video"
+previewPath = "/ecopilot-video"
+
+[artifact.services.development]
+run = "pnpm --filter @workspace/ecopilot-video run dev"
