@@ -36,8 +36,8 @@ export const en = {
   home: {
     hero: {
       badge: "Saudi Arabia Energy Standards",
-      title: "Intelligence for",
-      titleHighlight: "Energy Efficiency.",
+      title: "Artificial Intelligence",
+      titleHighlight: "In Energy Efficiency",
       subtitle: "Reduce energy consumption, lower costs, and receive personalized AI recommendations in under one minute.",
       saudiVision: "Saudi Vision 2030",
       features: {
