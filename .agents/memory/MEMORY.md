@@ -1,0 +1,1 @@
+- [Supabase Auth Setup](supabase-auth-setup.md) — Vite define trick for secrets, JWT claim hardening, setAuthTokenGetter wiring, RTL sync placement
