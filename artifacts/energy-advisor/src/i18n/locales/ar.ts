@@ -113,6 +113,7 @@ export const ar = {
     mobile: "رقم الجوال",
     save: "حفظ التغييرات",
     saved: "تم الحفظ!",
+    loadError: "فشل تحميل الملف الشخصي",
     saveError: "فشل حفظ الملف الشخصي"
   }
 };

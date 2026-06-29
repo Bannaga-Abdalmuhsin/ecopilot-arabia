@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/lib/supabase";
 import { useListAssessments } from "@workspace/api-client-react";
 import { Link, useLocation } from "wouter";
 import { format } from "date-fns";
@@ -28,8 +29,32 @@ function getInitials(displayName: string | null, email: string | null | undefine
   return (email?.[0] ?? "?").toUpperCase();
 }
 
+/** Gets a fresh (auto-refreshed) access token. Returns null if the session is gone. */
+async function getToken(): Promise<string | null> {
+  const { data } = await supabase.auth.getSession();
+  return data.session?.access_token ?? null;
+}
+
+/** Throws a typed error so callers can redirect to auth on 401. */
+class AuthExpiredError extends Error {}
+
+async function apiFetch(path: string, options?: RequestInit): Promise<Response> {
+  const token = await getToken();
+  if (!token) throw new AuthExpiredError("No session");
+  const res = await fetch(path, {
+    ...options,
+    headers: {
+      ...(options?.headers ?? {}),
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  });
+  if (res.status === 401) throw new AuthExpiredError("Session expired");
+  return res;
+}
+
 export default function Profile() {
-  const { user, session, signOut } = useAuth();
+  const { user, signOut } = useAuth();
   const { t } = useTranslation();
   const [, navigate] = useLocation();
   const { toast } = useToast();
@@ -50,47 +75,53 @@ export default function Profile() {
     if (!user) navigate("/auth");
   }, [user, navigate]);
 
-  // Fetch profile
+  // Fetch profile — always get a fresh token so expired sessions are auto-refreshed
   useEffect(() => {
-    if (!session?.access_token) return;
-    fetch("/api/profile", {
-      headers: { Authorization: `Bearer ${session.access_token}` }
-    })
-      .then(async (r) => {
-        if (!r.ok) throw new Error(`${r.status}`);
-        return r.json() as Promise<Profile>;
-      })
-      .then((data) => {
-        setProfile(data);
-        setDisplayName(data.displayName ?? "");
-        setMobile(data.mobile ?? "");
-      })
-      .catch(() => {
-        toast({ title: t("profile.saveError"), variant: "destructive" });
-      })
-      .finally(() => setProfileLoading(false));
-  }, [session?.access_token]);
+    if (!user) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const r = await apiFetch("/api/profile");
+        const data: Profile = await r.json();
+        if (!cancelled) {
+          setProfile(data);
+          setDisplayName(data.displayName ?? "");
+          setMobile(data.mobile ?? "");
+        }
+      } catch (err) {
+        if (cancelled) return;
+        if (err instanceof AuthExpiredError) {
+          await signOut();
+          navigate("/auth");
+        } else {
+          toast({ title: t("profile.loadError"), variant: "destructive" });
+        }
+      } finally {
+        if (!cancelled) setProfileLoading(false);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [user]);
 
   const handleSave = async () => {
-    if (!session?.access_token) return;
     setSaving(true);
     setSaved(false);
     try {
-      const res = await fetch("/api/profile", {
+      const res = await apiFetch("/api/profile", {
         method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${session.access_token}`,
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify({ displayName: displayName || null, mobile: mobile || null }),
       });
-      if (!res.ok) throw new Error("Failed");
       const data: Profile = await res.json();
       setProfile(data);
       setSaved(true);
       setTimeout(() => setSaved(false), 2500);
-    } catch {
-      toast({ title: t("profile.saveError"), variant: "destructive" });
+    } catch (err) {
+      if (err instanceof AuthExpiredError) {
+        await signOut();
+        navigate("/auth");
+      } else {
+        toast({ title: t("profile.saveError"), variant: "destructive" });
+      }
     } finally {
       setSaving(false);
     }

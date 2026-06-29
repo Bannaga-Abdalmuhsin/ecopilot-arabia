@@ -113,6 +113,7 @@ export const en = {
     mobile: "Mobile Number",
     save: "Save Changes",
     saved: "Saved!",
+    loadError: "Failed to load profile",
     saveError: "Failed to save profile"
   }
 };
