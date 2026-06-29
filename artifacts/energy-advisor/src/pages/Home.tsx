@@ -150,54 +150,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Consultation Section */}
-      <section className="py-16 bg-background">
-        <div className="container mx-auto px-4 md:px-6">
-          <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold tracking-tight mb-3">{t('home.consultation.title')}</h2>
-            <p className="text-muted-foreground text-lg">{t('home.consultation.subtitle')}</p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            <a href="mailto:bannaga.altieb@gmail.com" className="block group">
-              <Card className="h-full bg-card hover:bg-accent/50 transition-colors border-primary/10 hover:border-primary/30 shadow-sm">
-                <CardContent className="flex flex-col items-center text-center p-6 pt-8">
-                  <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                    <Mail className="h-6 w-6 text-primary group-hover:text-primary-foreground" />
-                  </div>
-                  <h3 className="font-semibold text-lg mb-1">{t('home.consultation.emailLabel')}</h3>
-                  <p className="text-muted-foreground text-sm" dir="ltr">bannaga.altieb@gmail.com</p>
-                </CardContent>
-              </Card>
-            </a>
-            
-            <a href="https://wa.me/966542966343" target="_blank" rel="noopener noreferrer" className="block group">
-              <Card className="h-full bg-card hover:bg-accent/50 transition-colors border-primary/10 hover:border-primary/30 shadow-sm">
-                <CardContent className="flex flex-col items-center text-center p-6 pt-8">
-                  <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                    <MessageCircle className="h-6 w-6 text-primary group-hover:text-primary-foreground" />
-                  </div>
-                  <h3 className="font-semibold text-lg mb-1">{t('home.consultation.whatsappLabel')}</h3>
-                  <p className="text-muted-foreground text-sm" dir="ltr">+966 54 296 6343</p>
-                </CardContent>
-              </Card>
-            </a>
-            
-            <a href="tel:+966507055677" className="block group">
-              <Card className="h-full bg-card hover:bg-accent/50 transition-colors border-primary/10 hover:border-primary/30 shadow-sm">
-                <CardContent className="flex flex-col items-center text-center p-6 pt-8">
-                  <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                    <Phone className="h-6 w-6 text-primary group-hover:text-primary-foreground" />
-                  </div>
-                  <h3 className="font-semibold text-lg mb-1">{t('home.consultation.phoneLabel')}</h3>
-                  <p className="text-muted-foreground text-sm" dir="ltr">+966 50 705 5677</p>
-                </CardContent>
-              </Card>
-            </a>
-          </div>
-        </div>
-      </section>
-
       {/* Assessment Form */}
       <section className="flex-1 py-12 bg-muted/30">
         <div className="container mx-auto px-4 md:px-6 max-w-2xl">
@@ -499,6 +451,54 @@ export default function Home() {
               </form>
             </Form>
           </Card>
+        </div>
+      </section>
+
+      {/* Consultation Section */}
+      <section className="py-16 bg-background">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="text-center mb-10">
+            <h2 className="text-3xl font-bold tracking-tight mb-3">{t('home.consultation.title')}</h2>
+            <p className="text-muted-foreground text-lg">{t('home.consultation.subtitle')}</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+            <a href="mailto:bannaga.altieb@gmail.com" className="block group">
+              <Card className="h-full bg-card hover:bg-accent/50 transition-colors border-primary/10 hover:border-primary/30 shadow-sm">
+                <CardContent className="flex flex-col items-center text-center p-6 pt-8">
+                  <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                    <Mail className="h-6 w-6 text-primary group-hover:text-primary-foreground" />
+                  </div>
+                  <h3 className="font-semibold text-lg mb-1">{t('home.consultation.emailLabel')}</h3>
+                  <p className="text-muted-foreground text-sm" dir="ltr">bannaga.altieb@gmail.com</p>
+                </CardContent>
+              </Card>
+            </a>
+            
+            <a href="https://wa.me/966542966343" target="_blank" rel="noopener noreferrer" className="block group">
+              <Card className="h-full bg-card hover:bg-accent/50 transition-colors border-primary/10 hover:border-primary/30 shadow-sm">
+                <CardContent className="flex flex-col items-center text-center p-6 pt-8">
+                  <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                    <MessageCircle className="h-6 w-6 text-primary group-hover:text-primary-foreground" />
+                  </div>
+                  <h3 className="font-semibold text-lg mb-1">{t('home.consultation.whatsappLabel')}</h3>
+                  <p className="text-muted-foreground text-sm" dir="ltr">+966 54 296 6343</p>
+                </CardContent>
+              </Card>
+            </a>
+            
+            <a href="tel:+966507055677" className="block group">
+              <Card className="h-full bg-card hover:bg-accent/50 transition-colors border-primary/10 hover:border-primary/30 shadow-sm">
+                <CardContent className="flex flex-col items-center text-center p-6 pt-8">
+                  <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                    <Phone className="h-6 w-6 text-primary group-hover:text-primary-foreground" />
+                  </div>
+                  <h3 className="font-semibold text-lg mb-1">{t('home.consultation.phoneLabel')}</h3>
+                  <p className="text-muted-foreground text-sm" dir="ltr">+966 50 705 5677</p>
+                </CardContent>
+              </Card>
+            </a>
+          </div>
         </div>
       </section>
     </div>
