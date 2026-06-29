@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter"
-import { Building2, History, Leaf, LogOut, Globe, LogIn } from "lucide-react"
+import { Building2, History, LogOut, Globe, LogIn } from "lucide-react"
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/AuthContext";
 import { useEffect } from "react";
@@ -22,13 +22,12 @@ export function Navbar() {
   return (
     <nav className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md">
       <div className="container mx-auto flex h-16 items-center px-4 md:px-6">
-        <Link href="/" className="flex items-center gap-2 font-semibold">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <Leaf className="h-5 w-5" />
-          </div>
-          <span className="hidden sm:inline-block text-lg font-bold tracking-tight text-foreground">
-            EcoPilot <span className="text-muted-foreground font-medium">Arabia</span>
-          </span>
+        <Link href="/" className="flex items-center">
+          <img
+            src="/logo.png"
+            alt="EcoPilot Arabia"
+            className="h-12 w-auto object-contain rounded-lg"
+          />
         </Link>
         <div className="flex flex-1 items-center justify-end space-x-4 md:space-x-6">
           <Link 

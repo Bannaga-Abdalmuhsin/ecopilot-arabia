@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Loader2, Leaf, MailCheck, AlertCircle } from 'lucide-react';
+import { Loader2, MailCheck, AlertCircle } from 'lucide-react';
 import { SiGoogle } from 'react-icons/si';
 import { useTranslation } from 'react-i18next';
 
@@ -130,11 +130,13 @@ export default function Auth() {
 
       <div className="z-10 w-full max-w-md px-4">
         <div className="flex flex-col items-center mb-8">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-primary-foreground mb-4">
-            <Leaf className="h-7 w-7" />
-          </div>
-          <h1 className="text-3xl font-bold tracking-tight">EcoPilot Arabia</h1>
-          <p className="text-muted mt-2 text-center text-sm">Intelligence for Energy Efficiency.</p>
+          <img
+            src="/logo.png"
+            alt="EcoPilot Arabia"
+            className="h-28 w-auto object-contain mb-2 drop-shadow-xl"
+          />
+          <h1 className="sr-only">EcoPilot Arabia</h1>
+          <p className="text-muted mt-1 text-center text-sm">Intelligence for Energy Efficiency.</p>
         </div>
 
         <Card className="border-primary/20 bg-background/95 backdrop-blur overflow-hidden">
