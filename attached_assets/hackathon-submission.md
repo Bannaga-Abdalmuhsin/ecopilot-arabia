@@ -131,7 +131,11 @@ The system operates as a fully autonomous agent — no human consultant is invol
 ---
 
 ### 9. Google Drive Link of Your Project Folder
-*(Upload via Google Drive integration — link to be inserted after upload)*
+**https://drive.google.com/drive/folders/1cPBpVl_a9k3yLKXsHRi3KczytiY6S6M7**
+
+Folder contains:
+- `Source Code/` — full source for energy-advisor (React frontend), api-server (Node.js backend), ecopilot-video (demo video app), and lib (shared library + OpenAPI spec + DB schema)
+- `Assets/` — hackathon-submission.md (answers doc), hero image
 
 ---
 
