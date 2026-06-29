@@ -4,8 +4,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { motion, AnimatePresence } from "framer-motion";
-import { Building2, Home as HomeIcon, Zap, Loader2, ArrowRight, ArrowLeft } from "lucide-react";
+import { Building2, Home as HomeIcon, Zap, Loader2, ArrowRight, ArrowLeft, Mail, MessageCircle, Phone } from "lucide-react";
 import { useCreateAssessment } from "@workspace/api-client-react";
+import { useTranslation } from "react-i18next";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -33,6 +34,7 @@ type FormValues = z.infer<typeof formSchema>;
 export default function Home() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
+  const { t } = useTranslation();
   const [step, setStep] = useState(1);
   
   const createAssessment = useCreateAssessment();
@@ -104,9 +106,9 @@ export default function Home() {
           <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full scale-150" />
           <Loader2 className="h-16 w-16 text-primary animate-spin relative z-10" />
         </div>
-        <h2 className="mt-8 text-2xl font-bold tracking-tight">Analyzing your building...</h2>
+        <h2 className="mt-8 text-2xl font-bold tracking-tight">{t('home.form.analyzing')}</h2>
         <p className="mt-2 text-muted-foreground max-w-sm">
-          Our AI consultant is processing your data against Saudi energy standards to generate precise recommendations.
+          {t('home.form.analyzingDesc')}
         </p>
       </div>
     );
@@ -124,15 +126,63 @@ export default function Home() {
           <div className="max-w-3xl space-y-6">
             <div className="inline-flex items-center rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
               <Zap className="mr-2 h-4 w-4" />
-              Saudi Arabia Energy Standards
+              {t('home.hero.badge')}
             </div>
             <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl">
-              Intelligence for <br className="hidden sm:block" />
-              <span className="text-primary">Energy Efficiency.</span>
+              {t('home.hero.title')} <br className="hidden sm:block" />
+              <span className="text-primary">{t('home.hero.titleHighlight')}</span>
             </h1>
             <p className="max-w-[600px] text-lg text-muted md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-              Reduce energy consumption, lower costs, and receive personalized AI recommendations in under one minute.
+              {t('home.hero.subtitle')}
             </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Consultation Section */}
+      <section className="py-16 bg-background">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="text-center mb-10">
+            <h2 className="text-3xl font-bold tracking-tight mb-3">{t('home.consultation.title')}</h2>
+            <p className="text-muted-foreground text-lg">{t('home.consultation.subtitle')}</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+            <a href="mailto:bannaga.altieb@gmail.com" className="block group">
+              <Card className="h-full bg-card hover:bg-accent/50 transition-colors border-primary/10 hover:border-primary/30 shadow-sm">
+                <CardContent className="flex flex-col items-center text-center p-6 pt-8">
+                  <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                    <Mail className="h-6 w-6 text-primary group-hover:text-primary-foreground" />
+                  </div>
+                  <h3 className="font-semibold text-lg mb-1">{t('home.consultation.emailLabel')}</h3>
+                  <p className="text-muted-foreground text-sm" dir="ltr">bannaga.altieb@gmail.com</p>
+                </CardContent>
+              </Card>
+            </a>
+            
+            <a href="https://wa.me/966542966343" target="_blank" rel="noopener noreferrer" className="block group">
+              <Card className="h-full bg-card hover:bg-accent/50 transition-colors border-primary/10 hover:border-primary/30 shadow-sm">
+                <CardContent className="flex flex-col items-center text-center p-6 pt-8">
+                  <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                    <MessageCircle className="h-6 w-6 text-primary group-hover:text-primary-foreground" />
+                  </div>
+                  <h3 className="font-semibold text-lg mb-1">{t('home.consultation.whatsappLabel')}</h3>
+                  <p className="text-muted-foreground text-sm" dir="ltr">+966 54 296 6343</p>
+                </CardContent>
+              </Card>
+            </a>
+            
+            <a href="tel:+966507055677" className="block group">
+              <Card className="h-full bg-card hover:bg-accent/50 transition-colors border-primary/10 hover:border-primary/30 shadow-sm">
+                <CardContent className="flex flex-col items-center text-center p-6 pt-8">
+                  <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                    <Phone className="h-6 w-6 text-primary group-hover:text-primary-foreground" />
+                  </div>
+                  <h3 className="font-semibold text-lg mb-1">{t('home.consultation.phoneLabel')}</h3>
+                  <p className="text-muted-foreground text-sm" dir="ltr">+966 50 705 5677</p>
+                </CardContent>
+              </Card>
+            </a>
           </div>
         </div>
       </section>
@@ -141,9 +191,9 @@ export default function Home() {
       <section className="flex-1 py-12 bg-muted/30">
         <div className="container mx-auto px-4 md:px-6 max-w-2xl">
           <div className="mb-8 flex items-center justify-between relative">
-            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-border rounded-full" />
+            <div className="absolute ltr:left-0 rtl:right-0 top-1/2 -translate-y-1/2 w-full h-1 bg-border rounded-full" />
             <div 
-              className="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-primary rounded-full transition-all duration-500 ease-in-out" 
+              className="absolute ltr:left-0 rtl:right-0 top-1/2 -translate-y-1/2 h-1 bg-primary rounded-full transition-all duration-500 ease-in-out" 
               style={{ width: `${((step - 1) / 2) * 100}%` }}
             />
             
@@ -166,14 +216,14 @@ export default function Home() {
               <form onSubmit={form.handleSubmit(onSubmit)}>
                 <CardHeader>
                   <CardTitle>
-                    {step === 1 && "Basic Information"}
-                    {step === 2 && "Building Details"}
-                    {step === 3 && "Smart Features & Review"}
+                    {step === 1 && t('home.form.step1Title')}
+                    {step === 2 && t('home.form.step2Title')}
+                    {step === 3 && t('home.form.step3Title')}
                   </CardTitle>
                   <CardDescription>
-                    {step === 1 && "Tell us about the property you want to assess."}
-                    {step === 2 && "Detailed information helps us calculate precise HVAC and lighting costs."}
-                    {step === 3 && "Final details before we generate your AI report."}
+                    {step === 1 && t('home.form.step1Desc')}
+                    {step === 2 && t('home.form.step2Desc')}
+                    {step === 3 && t('home.form.step3Desc')}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -192,7 +242,7 @@ export default function Home() {
                           name="buildingType"
                           render={({ field }) => (
                             <FormItem className="space-y-3">
-                              <FormLabel>Building Type</FormLabel>
+                              <FormLabel>{t('home.form.buildingType')}</FormLabel>
                               <FormControl>
                                 <div className="grid grid-cols-2 gap-4">
                                   <label
@@ -208,7 +258,7 @@ export default function Home() {
                                       onChange={() => field.onChange("residential")}
                                     />
                                     <HomeIcon className="mb-3 h-6 w-6" />
-                                    <span className="text-sm font-semibold">Residential</span>
+                                    <span className="text-sm font-semibold">{t('home.form.residential')}</span>
                                   </label>
                                   <label
                                     className={`flex flex-col items-center justify-center rounded-md border-2 border-muted p-4 hover:bg-accent cursor-pointer transition-all ${
@@ -223,7 +273,7 @@ export default function Home() {
                                       onChange={() => field.onChange("commercial")}
                                     />
                                     <Building2 className="mb-3 h-6 w-6" />
-                                    <span className="text-sm font-semibold">Commercial</span>
+                                    <span className="text-sm font-semibold">{t('home.form.commercial')}</span>
                                   </label>
                                 </div>
                               </FormControl>
@@ -238,9 +288,9 @@ export default function Home() {
                             name="areaM2"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Total Area (m²)</FormLabel>
+                                <FormLabel>{t('home.form.areaM2')}</FormLabel>
                                 <FormControl>
-                                  <Input type="number" {...field} />
+                                  <Input type="number" dir="ltr" className="text-left" {...field} />
                                 </FormControl>
                                 <FormMessage />
                               </FormItem>
@@ -252,9 +302,9 @@ export default function Home() {
                             name="monthlyBillSar"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Avg. Monthly Bill (SAR)</FormLabel>
+                                <FormLabel>{t('home.form.monthlyBill')}</FormLabel>
                                 <FormControl>
-                                  <Input type="number" {...field} />
+                                  <Input type="number" dir="ltr" className="text-left" {...field} />
                                 </FormControl>
                                 <FormMessage />
                               </FormItem>
@@ -279,11 +329,10 @@ export default function Home() {
                             name="acUnits"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Number of AC Units</FormLabel>
+                                <FormLabel>{t('home.form.acUnits')}</FormLabel>
                                 <FormControl>
-                                  <Input type="number" {...field} />
+                                  <Input type="number" dir="ltr" className="text-left" {...field} />
                                 </FormControl>
-                                <FormDescription>Split, Window or Package units</FormDescription>
                                 <FormMessage />
                               </FormItem>
                             )}
@@ -294,9 +343,9 @@ export default function Home() {
                             name="buildingAge"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Building Age (Years)</FormLabel>
+                                <FormLabel>{t('home.form.buildingAge')}</FormLabel>
                                 <FormControl>
-                                  <Input type="number" {...field} />
+                                  <Input type="number" dir="ltr" className="text-left" {...field} />
                                 </FormControl>
                                 <FormMessage />
                               </FormItem>
@@ -309,17 +358,17 @@ export default function Home() {
                           name="lightingType"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Primary Lighting Type</FormLabel>
-                              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                              <FormLabel>{t('home.form.lightingType')}</FormLabel>
+                              <Select onValueChange={field.onChange} defaultValue={field.value} dir={document.documentElement.dir as any}>
                                 <FormControl>
                                   <SelectTrigger>
-                                    <SelectValue placeholder="Select lighting type" />
+                                    <SelectValue />
                                   </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
-                                  <SelectItem value="led">LED (Highly Efficient)</SelectItem>
-                                  <SelectItem value="fluorescent">Fluorescent / CFL (Moderate)</SelectItem>
-                                  <SelectItem value="incandescent">Incandescent / Halogen (Inefficient)</SelectItem>
+                                  <SelectItem value="led">{t('home.form.led')}</SelectItem>
+                                  <SelectItem value="fluorescent">{t('home.form.fluorescent')}</SelectItem>
+                                  <SelectItem value="incandescent">{t('home.form.incandescent')}</SelectItem>
                                 </SelectContent>
                               </Select>
                               <FormMessage />
@@ -333,16 +382,17 @@ export default function Home() {
                             name="workingHours"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Daily Working Hours</FormLabel>
+                                <FormLabel>{t('home.form.workingHours')}</FormLabel>
                                 <FormControl>
                                   <Input 
                                     type="number" 
+                                    dir="ltr"
+                                    className="text-left"
                                     {...field} 
                                     value={field.value ?? ""} 
                                     onChange={(e) => field.onChange(e.target.value === "" ? null : Number(e.target.value))}
                                   />
                                 </FormControl>
-                                <FormDescription>Average operating hours per day</FormDescription>
                                 <FormMessage />
                               </FormItem>
                             )}
@@ -367,10 +417,7 @@ export default function Home() {
                             render={({ field }) => (
                               <FormItem className="flex flex-row items-center justify-between space-y-0">
                                 <div className="space-y-0.5">
-                                  <FormLabel className="text-base">Solar Panels</FormLabel>
-                                  <FormDescription>
-                                    Are solar panels installed on the property?
-                                  </FormDescription>
+                                  <FormLabel className="text-base">{t('home.form.hasSolar')}</FormLabel>
                                 </div>
                                 <FormControl>
                                   <Switch
@@ -390,10 +437,7 @@ export default function Home() {
                             render={({ field }) => (
                               <FormItem className="flex flex-row items-center justify-between space-y-0">
                                 <div className="space-y-0.5">
-                                  <FormLabel className="text-base">Smart Thermostats</FormLabel>
-                                  <FormDescription>
-                                    Do you use programmable or smart AC controls?
-                                  </FormDescription>
+                                  <FormLabel className="text-base">{t('home.form.hasSmartThermostat')}</FormLabel>
                                 </div>
                                 <FormControl>
                                   <Switch
@@ -404,16 +448,6 @@ export default function Home() {
                               </FormItem>
                             )}
                           />
-                        </div>
-
-                        <div className="rounded-lg bg-primary/10 p-4 border border-primary/20">
-                          <h4 className="font-semibold text-primary mb-2 flex items-center">
-                            <Zap className="h-4 w-4 mr-2" />
-                            Ready for Analysis
-                          </h4>
-                          <p className="text-sm text-muted-foreground">
-                            You're about to submit this profile to our AI energy consultant. The analysis takes just a few seconds and provides a comprehensive breakdown of your potential savings.
-                          </p>
                         </div>
                       </motion.div>
                     )}
@@ -426,26 +460,26 @@ export default function Home() {
                     onClick={prevStep}
                     disabled={step === 1}
                   >
-                    <ArrowLeft className="mr-2 h-4 w-4" />
-                    Back
+                    <ArrowLeft className="ltr:mr-2 rtl:ml-2 h-4 w-4 rtl:rotate-180" />
+                    {t('home.form.back')}
                   </Button>
                   
                   {step < 3 ? (
                     <Button type="button" onClick={nextStep}>
-                      Next Step
-                      <ArrowRight className="ml-2 h-4 w-4" />
+                      {t('home.form.next')}
+                      <ArrowRight className="ltr:ml-2 rtl:mr-2 h-4 w-4 rtl:rotate-180" />
                     </Button>
                   ) : (
                     <Button type="submit" disabled={createAssessment.isPending}>
                       {createAssessment.isPending ? (
                         <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Analyzing...
+                          <Loader2 className="ltr:mr-2 rtl:ml-2 h-4 w-4 animate-spin" />
+                          {t('home.form.analyzing')}
                         </>
                       ) : (
                         <>
-                          Generate Report
-                          <Zap className="ml-2 h-4 w-4" />
+                          {t('home.form.submit')}
+                          <Zap className="ltr:ml-2 rtl:mr-2 h-4 w-4" />
                         </>
                       )}
                     </Button>

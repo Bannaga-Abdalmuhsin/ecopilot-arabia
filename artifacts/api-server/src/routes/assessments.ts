@@ -1,18 +1,24 @@
 import { Router } from "express";
 import { db } from "@workspace/db";
 import { assessmentsTable, reportsTable, chatMessagesTable } from "@workspace/db";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { analyzeEnergyAssessment, chatWithContext, type AssessmentData, type EnergyReport } from "../lib/openai";
 import { CreateAssessmentBody, SendChatMessageBody, GetAssessmentParams, GetChatHistoryParams, SendChatMessageParams } from "@workspace/api-zod";
+import { requireAuth } from "../middlewares/auth";
 
 const router = Router();
 
-// GET /assessments
+// All assessment routes require authentication
+router.use(requireAuth);
+
+// GET /assessments — only the logged-in user's assessments
 router.get("/assessments", async (req, res) => {
   try {
+    const userId = req.user!.sub;
     const assessments = await db
       .select()
       .from(assessmentsTable)
+      .where(eq(assessmentsTable.userId, userId))
       .orderBy(assessmentsTable.createdAt);
     res.json(assessments.reverse());
   } catch (err) {
@@ -21,7 +27,7 @@ router.get("/assessments", async (req, res) => {
   }
 });
 
-// POST /assessments — atomic: inserts assessment, calls AI, inserts report; rolls back assessment on any failure
+// POST /assessments — atomic: inserts assessment, calls AI, inserts report; rolls back on failure
 router.post("/assessments", async (req, res) => {
   const parsed = CreateAssessmentBody.safeParse(req.body);
   if (!parsed.success) {
@@ -30,14 +36,14 @@ router.post("/assessments", async (req, res) => {
   }
 
   const input = parsed.data;
-
+  const userId = req.user!.sub;
   let assessmentId: number | null = null;
 
   try {
-    // Insert assessment
     const [assessment] = await db
       .insert(assessmentsTable)
       .values({
+        userId,
         buildingType: input.buildingType,
         areaM2: input.areaM2,
         monthlyBillSar: input.monthlyBillSar,
@@ -64,10 +70,8 @@ router.post("/assessments", async (req, res) => {
       hasSmartThermostat: assessment.hasSmartThermostat,
     };
 
-    // Call AI — if this throws, we clean up the assessment below
     const aiReport = await analyzeEnergyAssessment(assessmentData);
 
-    // Validate critical AI fields before persisting
     if (
       typeof aiReport.energy_score !== "number" ||
       typeof aiReport.estimated_waste_pct !== "number" ||
@@ -77,7 +81,6 @@ router.post("/assessments", async (req, res) => {
       throw new Error("AI returned malformed report structure");
     }
 
-    // Insert report
     const [report] = await db
       .insert(reportsTable)
       .values({
@@ -107,8 +110,6 @@ router.post("/assessments", async (req, res) => {
     res.status(201).json({ assessment, report });
   } catch (err) {
     req.log.error({ err }, "Assessment creation failed");
-
-    // Roll back: delete orphan assessment if it was inserted
     if (assessmentId !== null) {
       try {
         await db.delete(assessmentsTable).where(eq(assessmentsTable.id, assessmentId));
@@ -116,15 +117,15 @@ router.post("/assessments", async (req, res) => {
         req.log.error({ cleanupErr }, "Failed to clean up orphan assessment");
       }
     }
-
-    const message = err instanceof Error && err.message.includes("AI")
-      ? "AI analysis failed. Please try again."
-      : "Failed to create assessment. Please try again.";
+    const message =
+      err instanceof Error && err.message.includes("AI")
+        ? "AI analysis failed. Please try again."
+        : "Failed to create assessment. Please try again.";
     res.status(500).json({ error: message });
   }
 });
 
-// GET /assessments/:id
+// GET /assessments/:id — verify ownership
 router.get("/assessments/:id", async (req, res) => {
   const parsed = GetAssessmentParams.safeParse({ id: Number(req.params.id) });
   if (!parsed.success) {
@@ -134,11 +135,12 @@ router.get("/assessments/:id", async (req, res) => {
 
   try {
     const { id } = parsed.data;
+    const userId = req.user!.sub;
 
     const [assessment] = await db
       .select()
       .from(assessmentsTable)
-      .where(eq(assessmentsTable.id, id));
+      .where(and(eq(assessmentsTable.id, id), eq(assessmentsTable.userId, userId)));
 
     if (!assessment) {
       res.status(404).json({ error: "Assessment not found" });
@@ -162,7 +164,7 @@ router.get("/assessments/:id", async (req, res) => {
   }
 });
 
-// GET /assessments/:id/chat
+// GET /assessments/:id/chat — verify ownership
 router.get("/assessments/:id/chat", async (req, res) => {
   const parsed = GetChatHistoryParams.safeParse({ id: Number(req.params.id) });
   if (!parsed.success) {
@@ -172,11 +174,12 @@ router.get("/assessments/:id/chat", async (req, res) => {
 
   try {
     const { id } = parsed.data;
+    const userId = req.user!.sub;
 
     const [assessment] = await db
       .select()
       .from(assessmentsTable)
-      .where(eq(assessmentsTable.id, id));
+      .where(and(eq(assessmentsTable.id, id), eq(assessmentsTable.userId, userId)));
 
     if (!assessment) {
       res.status(404).json({ error: "Assessment not found" });
@@ -196,7 +199,7 @@ router.get("/assessments/:id/chat", async (req, res) => {
   }
 });
 
-// POST /assessments/:id/chat
+// POST /assessments/:id/chat — verify ownership
 router.post("/assessments/:id/chat", async (req, res) => {
   const paramsParsed = SendChatMessageParams.safeParse({ id: Number(req.params.id) });
   const bodyParsed = SendChatMessageBody.safeParse(req.body);
@@ -208,14 +211,14 @@ router.post("/assessments/:id/chat", async (req, res) => {
 
   const { id } = paramsParsed.data;
   const { content } = bodyParsed.data;
-
+  const userId = req.user!.sub;
   let userMsgId: number | null = null;
 
   try {
     const [assessment] = await db
       .select()
       .from(assessmentsTable)
-      .where(eq(assessmentsTable.id, id));
+      .where(and(eq(assessmentsTable.id, id), eq(assessmentsTable.userId, userId)));
 
     if (!assessment) {
       res.status(404).json({ error: "Assessment not found" });
@@ -232,14 +235,12 @@ router.post("/assessments/:id/chat", async (req, res) => {
       return;
     }
 
-    // Save user message
     const [userMsg] = await db
       .insert(chatMessagesTable)
       .values({ assessmentId: id, role: "user", content })
       .returning();
     userMsgId = userMsg.id;
 
-    // Get chat history for context (exclude the message we just inserted)
     const history = await db
       .select()
       .from(chatMessagesTable)
@@ -270,9 +271,15 @@ router.post("/assessments/:id/chat", async (req, res) => {
       executive_summary: report.executiveSummary,
       carbon_reduction_tons: report.carbonReductionTons,
       trees_equivalent: report.treesEquivalent,
-      recommendations: (report.recommendations as Array<{
-        title: string; savingsSar: number; roiYears: number; priorityStars: number; rationale: string;
-      }>).map((r) => ({
+      recommendations: (
+        report.recommendations as Array<{
+          title: string;
+          savingsSar: number;
+          roiYears: number;
+          priorityStars: number;
+          rationale: string;
+        }>
+      ).map((r) => ({
         title: r.title,
         savings_sar: r.savingsSar,
         roi_years: r.roiYears,
@@ -284,7 +291,6 @@ router.post("/assessments/:id/chat", async (req, res) => {
 
     const aiResponse = await chatWithContext(assessmentData, aiReportContext, chatHistory, content);
 
-    // Save assistant message
     const [assistantMessage] = await db
       .insert(chatMessagesTable)
       .values({ assessmentId: id, role: "assistant", content: aiResponse })
@@ -293,8 +299,6 @@ router.post("/assessments/:id/chat", async (req, res) => {
     res.json(assistantMessage);
   } catch (err) {
     req.log.error({ err }, "Chat failed");
-
-    // Roll back user message on AI failure so conversation stays consistent
     if (userMsgId !== null) {
       try {
         await db.delete(chatMessagesTable).where(eq(chatMessagesTable.id, userMsgId));
@@ -302,7 +306,6 @@ router.post("/assessments/:id/chat", async (req, res) => {
         req.log.error({ cleanupErr }, "Failed to clean up orphan user message");
       }
     }
-
     res.status(500).json({ error: "AI response failed. Please try again." });
   }
 });

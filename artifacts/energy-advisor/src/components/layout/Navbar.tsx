@@ -1,8 +1,23 @@
 import { Link, useLocation } from "wouter"
-import { Building2, History, Leaf } from "lucide-react"
+import { Building2, History, Leaf, LogOut, Globe } from "lucide-react"
+import { useTranslation } from "react-i18next";
+import { useAuth } from "@/contexts/AuthContext";
+import { useEffect } from "react";
+import { Button } from "@/components/ui/button";
 
 export function Navbar() {
   const [location] = useLocation();
+  const { t, i18n } = useTranslation();
+  const { user, signOut } = useAuth();
+
+  useEffect(() => {
+    document.documentElement.dir = i18n.language === 'ar' ? 'rtl' : 'ltr';
+    document.documentElement.lang = i18n.language;
+  }, [i18n.language]);
+
+  const toggleLanguage = () => {
+    i18n.changeLanguage(i18n.language === 'ar' ? 'en' : 'ar');
+  };
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md">
@@ -15,14 +30,14 @@ export function Navbar() {
             Taqah <span className="text-muted-foreground font-medium">Advisor</span>
           </span>
         </Link>
-        <div className="flex flex-1 items-center justify-end space-x-6">
+        <div className="flex flex-1 items-center justify-end space-x-4 md:space-x-6">
           <Link 
             href="/" 
             className={`text-sm font-medium transition-colors hover:text-primary ${location === "/" ? "text-primary" : "text-muted-foreground"}`}
           >
             <div className="flex items-center gap-1.5">
               <Building2 className="h-4 w-4" />
-              <span>New Assessment</span>
+              <span className="hidden md:inline-block">{t('nav.newAssessment')}</span>
             </div>
           </Link>
           <Link 
@@ -31,9 +46,27 @@ export function Navbar() {
           >
             <div className="flex items-center gap-1.5">
               <History className="h-4 w-4" />
-              <span>History</span>
+              <span className="hidden md:inline-block">{t('nav.history')}</span>
             </div>
           </Link>
+          
+          <div className="h-4 w-px bg-border hidden sm:block" />
+          
+          <Button variant="ghost" size="sm" onClick={toggleLanguage} className="gap-2 px-2 text-muted-foreground hover:text-foreground">
+            <Globe className="h-4 w-4" />
+            <span className="font-semibold text-xs">{t('nav.language')}</span>
+          </Button>
+
+          {user && (
+            <div className="flex items-center gap-3">
+              <span className="text-xs text-muted-foreground hidden lg:inline-block max-w-[120px] truncate" dir="ltr">
+                {user.email}
+              </span>
+              <Button variant="ghost" size="icon" onClick={signOut} className="text-muted-foreground hover:text-destructive" title={t('nav.signOut')}>
+                <LogOut className="h-4 w-4" />
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </nav>

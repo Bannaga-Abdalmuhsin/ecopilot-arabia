@@ -14,19 +14,19 @@ import {
 } from "recharts";
 import { 
   Download, Leaf, Zap, AlertTriangle, TrendingDown, Info, MessageSquare, 
-  Send, Loader2, Star, CheckCircle2, ChevronRight, Trees,
+  Send, Loader2, Star, CheckCircle2, Trees,
   Building2
 } from "lucide-react";
 import { format } from "date-fns";
+import { useTranslation } from "react-i18next";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
 
 // Helper components for radial chart (energy score)
-const RadialProgress = ({ score }: { score: number }) => {
+const RadialProgress = ({ score, label }: { score: number, label: string }) => {
   const radius = 60;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (score / 100) * circumference;
@@ -61,8 +61,8 @@ const RadialProgress = ({ score }: { score: number }) => {
         />
       </svg>
       <div className="absolute flex flex-col items-center justify-center">
-        <span className="text-4xl font-bold tracking-tighter">{score}</span>
-        <span className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">Score</span>
+        <span className="text-4xl font-bold tracking-tighter" dir="ltr">{score}</span>
+        <span className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">{label}</span>
       </div>
     </div>
   );
@@ -72,6 +72,7 @@ export default function Dashboard() {
   const { id } = useParams();
   const assessmentId = Number(id);
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
   
   const { data: assessmentData, isLoading: assessmentLoading, error: assessmentError } = useGetAssessment(
     assessmentId,
@@ -100,13 +101,11 @@ export default function Dashboard() {
 
     const currentMsg = messageInput;
     setMessageInput("");
-
-    // Optimistically update chat (optional, but good UX)
     
     sendMessage.mutate(
       { id: assessmentId, data: { content: currentMsg } },
       {
-        onSuccess: (newMsg) => {
+        onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: getGetChatHistoryQueryKey(assessmentId) });
         }
       }
@@ -130,9 +129,6 @@ export default function Dashboard() {
       <div className="flex-1 flex flex-col items-center justify-center p-8 text-center">
         <AlertTriangle className="h-16 w-16 text-destructive mb-4" />
         <h2 className="text-2xl font-bold tracking-tight mb-2">Report Not Found</h2>
-        <p className="text-muted-foreground max-w-md">
-          We couldn't load the assessment report. It may have been deleted or the ID is invalid.
-        </p>
       </div>
     );
   }
@@ -143,16 +139,16 @@ export default function Dashboard() {
 
   // Chart Data
   const breakdownData = [
-    { name: "HVAC", value: report.breakdown.hvac, color: "hsl(var(--chart-1))" },
-    { name: "Lighting", value: report.breakdown.lighting, color: "hsl(var(--chart-2))" },
-    { name: "Other", value: report.breakdown.other, color: "hsl(var(--chart-3))" },
+    { name: t('dashboard.hvac'), value: report.breakdown.hvac, color: "hsl(var(--chart-1))" },
+    { name: t('dashboard.lighting'), value: report.breakdown.lighting, color: "hsl(var(--chart-2))" },
+    { name: t('dashboard.other'), value: report.breakdown.other, color: "hsl(var(--chart-3))" },
   ];
 
   const savingsData = [
     {
-      name: "Annual Cost (SAR)",
-      Current: currentAnnualCost,
-      Optimized: optimizedAnnualCost,
+      name: "SAR",
+      [t('dashboard.currentCost')]: currentAnnualCost,
+      [t('dashboard.optimizedCost')]: optimizedAnnualCost,
     }
   ];
 
@@ -166,35 +162,35 @@ export default function Dashboard() {
           <div>
             <h1 className="text-3xl font-bold tracking-tight text-foreground">Energy Health Report</h1>
             <p className="text-muted-foreground mt-1 flex items-center">
-              <Building2 className="h-4 w-4 mr-2" />
-              {assessment.buildingType === 'commercial' ? 'Commercial Building' : 'Residential Property'} • 
-              {assessment.areaM2.toLocaleString()} m²
-              <span className="hidden sm:inline"> • Analyzed {format(new Date(report.createdAt), "MMMM d, yyyy")}</span>
+              <Building2 className="h-4 w-4 ltr:mr-2 rtl:ml-2" />
+              <span dir="ltr">{assessment.areaM2.toLocaleString()} m²</span>
+              <span className="mx-2">•</span>
+              <span>{format(new Date(report.createdAt), "MMMM d, yyyy")}</span>
             </p>
           </div>
           <Button onClick={handlePrint} variant="outline" className="print:hidden bg-background">
-            <Download className="h-4 w-4 mr-2" />
-            Export PDF
+            <Download className="h-4 w-4 ltr:mr-2 rtl:ml-2" />
+            {t('dashboard.exportPdf')}
           </Button>
         </div>
 
         {/* Top KPIs */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
           <Card className="flex flex-col items-center justify-center p-6 bg-card border-primary/20 shadow-sm">
-            <RadialProgress score={report.energyScore} />
+            <RadialProgress score={report.energyScore} label={t('dashboard.energyScore')} />
           </Card>
           
           <Card className="flex flex-col justify-center">
             <CardHeader className="pb-2">
               <CardDescription className="font-medium text-destructive flex items-center">
-                <AlertTriangle className="h-4 w-4 mr-1.5" />
-                Estimated Energy Waste
+                <AlertTriangle className="h-4 w-4 ltr:mr-1.5 rtl:ml-1.5" />
+                {t('dashboard.annualWaste')}
               </CardDescription>
-              <CardTitle className="text-3xl">{report.estimatedWastePct}%</CardTitle>
+              <CardTitle className="text-3xl" dir="ltr">{report.estimatedWastePct}%</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">
-                Costing approx. <span className="font-semibold text-foreground">{report.annualWasteSar.toLocaleString()} SAR</span> annually in inefficiencies.
+                <span className="font-semibold text-foreground" dir="ltr">{report.annualWasteSar.toLocaleString()} SAR</span>
               </p>
             </CardContent>
           </Card>
@@ -202,31 +198,26 @@ export default function Dashboard() {
           <Card className="flex flex-col justify-center bg-primary/5 border-primary/20">
             <CardHeader className="pb-2">
               <CardDescription className="font-medium text-primary flex items-center">
-                <TrendingDown className="h-4 w-4 mr-1.5" />
-                Potential Annual Savings
+                <TrendingDown className="h-4 w-4 ltr:mr-1.5 rtl:ml-1.5" />
+                {t('dashboard.potentialSavings')}
               </CardDescription>
-              <CardTitle className="text-3xl text-primary">{report.potentialSavingsSar.toLocaleString()} SAR</CardTitle>
+              <CardTitle className="text-3xl text-primary" dir="ltr">{report.potentialSavingsSar.toLocaleString()} SAR</CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                By implementing the recommended upgrades and optimizations.
-              </p>
-            </CardContent>
           </Card>
 
           <Card className="flex flex-col justify-center">
             <CardHeader className="pb-2">
               <CardDescription className="font-medium text-emerald-600 dark:text-emerald-500 flex items-center">
-                <Leaf className="h-4 w-4 mr-1.5" />
-                Carbon Reduction
+                <Leaf className="h-4 w-4 ltr:mr-1.5 rtl:ml-1.5" />
+                {t('dashboard.carbonReduction')}
               </CardDescription>
-              <CardTitle className="text-3xl">{report.carbonReductionTons} tons</CardTitle>
+              <CardTitle className="text-3xl" dir="ltr">{report.carbonReductionTons} tons</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground flex items-center">
-                CO₂ reduction per year. 
-                <br className="hidden xl:block" />
-                Equivalent to planting <Trees className="h-4 w-4 inline mx-1 text-emerald-600" /> <span className="font-semibold text-foreground">{report.treesEquivalent}</span> trees.
+              <p className="text-sm text-muted-foreground flex items-center flex-wrap gap-1">
+                <Trees className="h-4 w-4 inline text-emerald-600" />
+                <span className="font-semibold text-foreground" dir="ltr">{report.treesEquivalent}</span>
+                <span>{t('dashboard.treesEquivalent')}</span>
               </p>
             </CardContent>
           </Card>
@@ -236,12 +227,11 @@ export default function Dashboard() {
         <Card className="bg-card shadow-sm print:break-inside-avoid">
           <CardHeader>
             <CardTitle className="flex items-center text-xl">
-              <Zap className="h-5 w-5 mr-2 text-primary" />
-              AI Consultant Summary
+              <Zap className="h-5 w-5 ltr:mr-2 rtl:ml-2 text-primary" />
+              {t('dashboard.executiveSummary')}
             </CardTitle>
           </CardHeader>
           <CardContent className="prose prose-sm md:prose-base dark:prose-invert max-w-none">
-            {/* Simple markdown render for summary */}
             {report.executiveSummary.split('\n\n').map((p, i) => (
               <p key={i} className="text-muted-foreground leading-relaxed">{p}</p>
             ))}
@@ -249,11 +239,10 @@ export default function Dashboard() {
         </Card>
 
         {/* Charts Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 print:break-inside-avoid">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 print:break-inside-avoid" dir="ltr">
           <Card className="shadow-sm">
             <CardHeader>
-              <CardTitle className="text-lg">Energy Cost Breakdown</CardTitle>
-              <CardDescription>Current consumption distribution</CardDescription>
+              <CardTitle className="text-lg text-center">{t('dashboard.costBreakdown')}</CardTitle>
             </CardHeader>
             <CardContent className="flex justify-center items-center h-72">
               <ResponsiveContainer width="100%" height="100%">
@@ -283,8 +272,7 @@ export default function Dashboard() {
 
           <Card className="shadow-sm">
             <CardHeader>
-              <CardTitle className="text-lg">Impact Analysis</CardTitle>
-              <CardDescription>Current vs Optimized Annual Cost (SAR)</CardDescription>
+              <CardTitle className="text-lg text-center">{t('dashboard.savingsComparison')}</CardTitle>
             </CardHeader>
             <CardContent className="h-72 pt-4">
               <ResponsiveContainer width="100%" height="100%">
@@ -296,8 +284,8 @@ export default function Dashboard() {
                     cursor={{fill: 'hsl(var(--muted)/0.5)'}}
                     contentStyle={{ borderRadius: '8px', border: '1px solid hsl(var(--border))' }}
                   />
-                  <Bar dataKey="Current" fill="hsl(var(--chart-4))" radius={[4, 4, 0, 0]} barSize={60} />
-                  <Bar dataKey="Optimized" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} barSize={60} />
+                  <Bar dataKey={t('dashboard.currentCost')} fill="hsl(var(--chart-4))" radius={[4, 4, 0, 0]} barSize={60} />
+                  <Bar dataKey={t('dashboard.optimizedCost')} fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} barSize={60} />
                   <Legend />
                 </BarChart>
               </ResponsiveContainer>
@@ -308,9 +296,9 @@ export default function Dashboard() {
         {/* Recommendations */}
         <div className="space-y-4 print:break-before-page">
           <div className="flex items-center justify-between">
-            <h3 className="text-2xl font-bold tracking-tight">Action Plan</h3>
+            <h3 className="text-2xl font-bold tracking-tight">{t('dashboard.recommendations')}</h3>
             <span className="text-sm text-muted-foreground bg-muted px-3 py-1 rounded-full font-medium">
-              Ranked by Priority
+              {t('dashboard.priority')}
             </span>
           </div>
           
@@ -319,8 +307,8 @@ export default function Dashboard() {
               <Card key={i} className="overflow-hidden shadow-sm hover:border-primary/50 transition-colors">
                 <div className="flex flex-col md:flex-row">
                   {/* Left column - metrics */}
-                  <div className="bg-muted/30 p-6 md:w-64 flex flex-col justify-center border-b md:border-b-0 md:border-r border-border">
-                    <div className="flex items-center mb-4">
+                  <div className="bg-muted/30 p-6 md:w-64 flex flex-col justify-center border-b md:border-b-0 md:ltr:border-r md:rtl:border-l border-border">
+                    <div className="flex items-center mb-4" dir="ltr">
                       {[...Array(5)].map((_, starIdx) => (
                         <Star 
                           key={starIdx} 
@@ -331,15 +319,15 @@ export default function Dashboard() {
                     
                     <div className="space-y-3">
                       <div>
-                        <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">Annual Savings</p>
-                        <p className="text-xl font-bold text-primary">{rec.savingsSar.toLocaleString()} SAR</p>
+                        <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">{t('dashboard.savings')}</p>
+                        <p className="text-xl font-bold text-primary" dir="ltr">{rec.savingsSar.toLocaleString()} SAR</p>
                       </div>
                       <div>
-                        <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">Payback Period</p>
+                        <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">{t('dashboard.payback')}</p>
                         <p className="font-medium text-foreground">
                           {rec.roiYears < 1 
-                            ? `${Math.round(rec.roiYears * 12)} months` 
-                            : `${rec.roiYears} years`}
+                            ? `${Math.round(rec.roiYears * 12)} ${t('dashboard.months')}` 
+                            : `${rec.roiYears} ${t('dashboard.years')}`}
                         </p>
                       </div>
                     </div>
@@ -348,7 +336,7 @@ export default function Dashboard() {
                   {/* Right column - content */}
                   <div className="p-6 flex-1 flex flex-col justify-center">
                     <div className="flex items-start">
-                      <CheckCircle2 className="h-5 w-5 text-primary mt-0.5 mr-3 shrink-0" />
+                      <CheckCircle2 className="h-5 w-5 text-primary mt-0.5 ltr:mr-3 rtl:ml-3 shrink-0" />
                       <div>
                         <h4 className="text-lg font-bold mb-2">{rec.title}</h4>
                         <p className="text-muted-foreground text-sm leading-relaxed">{rec.rationale}</p>
@@ -364,15 +352,12 @@ export default function Dashboard() {
       </div>
 
       {/* AI Chat Panel - hidden when printing */}
-      <div className="w-full lg:w-96 border-l bg-card flex flex-col h-[500px] lg:h-auto print:hidden shadow-[-10px_0_15px_-3px_rgba(0,0,0,0.05)] z-10">
+      <div className="w-full lg:w-96 ltr:border-l rtl:border-r bg-card flex flex-col h-[500px] lg:h-auto print:hidden shadow-[-10px_0_15px_-3px_rgba(0,0,0,0.05)] z-10">
         <div className="p-4 border-b bg-background/50 backdrop-blur-sm sticky top-0 z-10">
           <h3 className="font-semibold flex items-center text-foreground">
-            <MessageSquare className="h-4 w-4 mr-2 text-primary" />
-            Ask the AI Consultant
+            <MessageSquare className="h-4 w-4 ltr:mr-2 rtl:ml-2 text-primary" />
+            {t('dashboard.chat.title')}
           </h3>
-          <p className="text-xs text-muted-foreground mt-1">
-            Ask specific questions about your report or how to implement changes.
-          </p>
         </div>
         
         <ScrollArea className="flex-1 p-4 bg-muted/10">
@@ -390,8 +375,8 @@ export default function Dashboard() {
                   <div 
                     className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm ${
                       msg.role === 'user' 
-                        ? 'bg-primary text-primary-foreground rounded-br-none' 
-                        : 'bg-card border shadow-sm text-card-foreground rounded-bl-none'
+                        ? 'bg-primary text-primary-foreground ltr:rounded-br-none rtl:rounded-bl-none' 
+                        : 'bg-card border shadow-sm text-card-foreground ltr:rounded-bl-none rtl:rounded-br-none'
                     }`}
                   >
                     {msg.content}
@@ -401,15 +386,12 @@ export default function Dashboard() {
             ) : (
               <div className="flex flex-col items-center justify-center h-full text-center p-8 opacity-50">
                 <Info className="h-8 w-8 mb-3" />
-                <p className="text-sm">
-                  I've analyzed your energy profile. Ask me anything about the recommendations or how to maximize your savings.
-                </p>
               </div>
             )}
             
             {sendMessage.isPending && (
               <div className="flex justify-start">
-                <div className="max-w-[85%] rounded-2xl px-4 py-3 text-sm bg-card border shadow-sm text-card-foreground rounded-bl-none flex items-center gap-2">
+                <div className="max-w-[85%] rounded-2xl px-4 py-3 text-sm bg-card border shadow-sm text-card-foreground ltr:rounded-bl-none rtl:rounded-br-none flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-primary/40 animate-bounce" />
                   <div className="w-2 h-2 rounded-full bg-primary/60 animate-bounce [animation-delay:0.2s]" />
                   <div className="w-2 h-2 rounded-full bg-primary animate-bounce [animation-delay:0.4s]" />
@@ -423,7 +405,7 @@ export default function Dashboard() {
         <div className="p-4 border-t bg-background">
           <form onSubmit={handleSendMessage} className="flex gap-2">
             <Input 
-              placeholder="Type your question..." 
+              placeholder={t('dashboard.chat.placeholder')} 
               value={messageInput}
               onChange={(e) => setMessageInput(e.target.value)}
               disabled={sendMessage.isPending}
@@ -433,7 +415,7 @@ export default function Dashboard() {
               type="submit" 
               size="icon" 
               disabled={!messageInput.trim() || sendMessage.isPending}
-              className="shrink-0"
+              className="shrink-0 ltr:rotate-0 rtl:rotate-180"
             >
               <Send className="h-4 w-4" />
             </Button>
