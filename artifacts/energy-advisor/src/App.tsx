@@ -7,6 +7,7 @@ import { Navbar } from '@/components/layout/Navbar';
 import Home from '@/pages/Home';
 import Dashboard from '@/pages/Dashboard';
 import History from '@/pages/History';
+import Profile from '@/pages/Profile';
 import Auth from '@/pages/Auth';
 
 import { I18nextProvider, useTranslation } from 'react-i18next';
@@ -82,6 +83,7 @@ function Router() {
         <Route path="/" component={Home} />
         <Route path="/dashboard/:id" component={Dashboard} />
         <Route path="/history" component={History} />
+        <Route path="/profile" component={Profile} />
         <Route component={NotFound} />
       </Switch>
     </>

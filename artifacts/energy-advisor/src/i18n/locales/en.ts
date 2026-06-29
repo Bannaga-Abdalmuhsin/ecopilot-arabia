@@ -4,6 +4,7 @@ export const en = {
     history: "History",
     signIn: "Sign In",
     signOut: "Sign Out",
+    profile: "My Profile",
     language: "العربية"
   },
   auth: {
@@ -104,5 +105,14 @@ export const en = {
     startAssessment: "Start Assessment",
     signInRequired: "Sign in to view history",
     signInRequiredDesc: "Your assessment history is saved to your account. Sign in to see all your past assessments."
+  },
+  profile: {
+    title: "My Profile",
+    displayName: "Full Name",
+    displayNamePlaceholder: "Enter your full name",
+    mobile: "Mobile Number",
+    save: "Save Changes",
+    saved: "Saved!",
+    saveError: "Failed to save profile"
   }
 };

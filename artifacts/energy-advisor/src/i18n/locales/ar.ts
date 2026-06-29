@@ -4,6 +4,7 @@ export const ar = {
     history: "السجل",
     signIn: "تسجيل الدخول",
     signOut: "تسجيل الخروج",
+    profile: "ملفي الشخصي",
     language: "EN"
   },
   auth: {
@@ -104,5 +105,14 @@ export const ar = {
     startAssessment: "ابدأ التقييم",
     signInRequired: "سجّل دخولك لعرض السجل",
     signInRequiredDesc: "يتم حفظ سجل تقييماتك في حسابك. سجّل دخولك لعرض جميع تقييماتك السابقة."
+  },
+  profile: {
+    title: "ملفي الشخصي",
+    displayName: "الاسم الكامل",
+    displayNamePlaceholder: "أدخل اسمك الكامل",
+    mobile: "رقم الجوال",
+    save: "حفظ التغييرات",
+    saved: "تم الحفظ!",
+    saveError: "فشل حفظ الملف الشخصي"
   }
 };
