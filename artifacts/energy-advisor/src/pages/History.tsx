@@ -1,14 +1,44 @@
 import { useListAssessments } from "@workspace/api-client-react";
 import { Link } from "wouter";
 import { format } from "date-fns";
-import { Building2, Home as HomeIcon, ArrowRight, Loader2, Calendar } from "lucide-react";
+import { Building2, Home as HomeIcon, ArrowRight, Loader2, Calendar, LogIn } from "lucide-react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function History() {
-  const { data: assessments, isLoading, error } = useListAssessments();
+  const { user, loading: authLoading } = useAuth();
+  const { data: assessments, isLoading, error } = useListAssessments({
+    query: { enabled: !!user }
+  });
   const { t } = useTranslation();
+
+  // Show guest sign-in prompt
+  if (!authLoading && !user) {
+    return (
+      <div className="flex-1 flex flex-col py-8 px-4 md:px-8 bg-muted/20">
+        <div className="container mx-auto max-w-5xl">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold tracking-tight mb-2">{t('history.title')}</h1>
+            <p className="text-muted-foreground">{t('history.subtitle')}</p>
+          </div>
+          <Card className="flex flex-col items-center justify-center py-16 text-center shadow-none border-dashed">
+            <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+              <LogIn className="h-8 w-8 text-primary" />
+            </div>
+            <CardTitle className="mb-2">{t('history.signInRequired')}</CardTitle>
+            <CardDescription className="max-w-sm mb-6">
+              {t('history.signInRequiredDesc')}
+            </CardDescription>
+            <Link href="/auth">
+              <Button>{t('nav.signIn')}</Button>
+            </Link>
+          </Card>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex-1 flex flex-col py-8 px-4 md:px-8 bg-muted/20">
@@ -18,7 +48,7 @@ export default function History() {
           <p className="text-muted-foreground">{t('history.subtitle')}</p>
         </div>
 
-        {isLoading ? (
+        {isLoading || authLoading ? (
           <div className="flex items-center justify-center py-20 text-muted-foreground">
             <Loader2 className="h-8 w-8 animate-spin ltr:mr-3 rtl:ml-3 text-primary" />
           </div>

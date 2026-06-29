@@ -2,6 +2,7 @@ export const ar = {
   nav: {
     newAssessment: "تقييم جديد",
     history: "السجل",
+    signIn: "تسجيل الدخول",
     signOut: "تسجيل الخروج",
     language: "EN"
   },
@@ -100,6 +101,8 @@ export const ar = {
     monthlyBill: "الفاتورة الشهرية",
     area: "المساحة",
     score: "الدرجة",
-    startAssessment: "ابدأ التقييم"
+    startAssessment: "ابدأ التقييم",
+    signInRequired: "سجّل دخولك لعرض السجل",
+    signInRequiredDesc: "يتم حفظ سجل تقييماتك في حسابك. سجّل دخولك لعرض جميع تقييماتك السابقة."
   }
 };

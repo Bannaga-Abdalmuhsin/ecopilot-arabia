@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
-import { Route, Switch, Router as WouterRouter, useLocation, Redirect } from 'wouter';
+import { Route, Switch, Router as WouterRouter, Redirect } from 'wouter';
 import { Navbar } from '@/components/layout/Navbar';
 import Home from '@/pages/Home';
 import Dashboard from '@/pages/Dashboard';
@@ -35,25 +35,6 @@ function LanguageDirectionSync() {
 
 const queryClient = new QueryClient();
 
-// Redirect unauthenticated users to /auth; show spinner while session loads
-function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useAuth();
-
-  if (loading) {
-    return (
-      <div className="flex-1 flex items-center justify-center">
-        <Loader2 className="h-12 w-12 text-primary animate-spin" />
-      </div>
-    );
-  }
-
-  if (!user) {
-    return <Redirect to="/auth" />;
-  }
-
-  return <>{children}</>;
-}
-
 // Redirect already-authenticated users away from /auth
 function AuthRoute() {
   const { user, loading } = useAuth();
@@ -77,18 +58,10 @@ function Router() {
   return (
     <Switch>
       <Route path="/auth" component={AuthRoute} />
-      <Route path="/">
-        {() => <ProtectedRoute><Home /></ProtectedRoute>}
-      </Route>
-      <Route path="/dashboard/:id">
-        {() => <ProtectedRoute><Dashboard /></ProtectedRoute>}
-      </Route>
-      <Route path="/history">
-        {() => <ProtectedRoute><History /></ProtectedRoute>}
-      </Route>
-      <Route>
-        {() => <ProtectedRoute><NotFound /></ProtectedRoute>}
-      </Route>
+      <Route path="/" component={Home} />
+      <Route path="/dashboard/:id" component={Dashboard} />
+      <Route path="/history" component={History} />
+      <Route component={NotFound} />
     </Switch>
   );
 }

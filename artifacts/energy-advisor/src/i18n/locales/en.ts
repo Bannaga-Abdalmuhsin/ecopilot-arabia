@@ -2,6 +2,7 @@ export const en = {
   nav: {
     newAssessment: "New Assessment",
     history: "History",
+    signIn: "Sign In",
     signOut: "Sign Out",
     language: "العربية"
   },
@@ -100,6 +101,8 @@ export const en = {
     monthlyBill: "Monthly Bill",
     area: "Area",
     score: "Score",
-    startAssessment: "Start Assessment"
+    startAssessment: "Start Assessment",
+    signInRequired: "Sign in to view history",
+    signInRequiredDesc: "Your assessment history is saved to your account. Sign in to see all your past assessments."
   }
 };

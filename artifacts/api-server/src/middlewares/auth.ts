@@ -71,3 +71,29 @@ export function requireAuth(req: Request, res: Response, next: NextFunction): vo
     res.status(401).json({ error: "Invalid or expired token" });
   }
 }
+
+/**
+ * Parses the token if present and valid.
+ * If an Authorization header IS present but the token is invalid, rejects with 401.
+ * If no Authorization header, proceeds as anonymous.
+ */
+export function optionalAuth(req: Request, res: Response, next: NextFunction): void {
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.startsWith("Bearer ")) {
+    const token = authHeader.slice(7);
+    try {
+      const payload = jwt.verify(token, SUPABASE_JWT_SECRET!, {
+        algorithms: ["HS256"],
+      }) as SupabaseJwtPayload;
+      if (!isAuthenticated(payload)) {
+        res.status(401).json({ error: "Token does not represent an authenticated user" });
+        return;
+      }
+      req.user = payload;
+    } catch {
+      res.status(401).json({ error: "Invalid or expired token" });
+      return;
+    }
+  }
+  next();
+}

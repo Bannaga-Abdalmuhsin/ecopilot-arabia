@@ -62,6 +62,17 @@ export default function Home() {
         { data },
         {
           onSuccess: (response) => {
+            // Store guest token in localStorage so Dashboard can authenticate anonymous access
+            const guestToken = (response as any).guestToken;
+            if (guestToken) {
+              try {
+                const stored = JSON.parse(localStorage.getItem("guestTokens") || "{}");
+                stored[response.assessment.id] = guestToken;
+                localStorage.setItem("guestTokens", JSON.stringify(stored));
+              } catch {
+                // localStorage unavailable — guest chat will be limited
+              }
+            }
             setLocation(`/dashboard/${response.assessment.id}`);
           },
           onError: (error) => {

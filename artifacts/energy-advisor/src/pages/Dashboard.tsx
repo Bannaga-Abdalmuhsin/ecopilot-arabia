@@ -5,7 +5,8 @@ import {
   useGetChatHistory, 
   useSendChatMessage,
   getGetAssessmentQueryKey,
-  getGetChatHistoryQueryKey
+  getGetChatHistoryQueryKey,
+  setGuestTokenGetter
 } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { 
@@ -73,6 +74,20 @@ export default function Dashboard() {
   const assessmentId = Number(id);
   const queryClient = useQueryClient();
   const { t } = useTranslation();
+
+  // Wire guest token for anonymous assessment access
+  useEffect(() => {
+    if (!assessmentId) return;
+    setGuestTokenGetter(() => {
+      try {
+        const stored = JSON.parse(localStorage.getItem("guestTokens") || "{}");
+        return stored[assessmentId] ?? null;
+      } catch {
+        return null;
+      }
+    });
+    return () => setGuestTokenGetter(null);
+  }, [assessmentId]);
   
   const { data: assessmentData, isLoading: assessmentLoading, error: assessmentError } = useGetAssessment(
     assessmentId,
