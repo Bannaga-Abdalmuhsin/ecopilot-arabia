@@ -26,12 +26,16 @@ export function Navbar() {
   return (
     <nav className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md">
       <div className="container mx-auto flex h-16 items-center px-4 md:px-6">
-        <Link href="/" className="flex items-center">
+        <Link href="/" className="flex items-center gap-2.5">
           <img
-            src="/logo.png"
+            src="/logo-icon.png"
             alt="EcoPilot Arabia"
-            className="h-12 w-auto object-contain rounded-lg"
+            className="h-12 w-12 object-contain flex-shrink-0"
           />
+          <span className="hidden sm:flex flex-col leading-tight">
+            <span className="text-base font-bold text-foreground tracking-tight">EcoPilot</span>
+            <span className="text-xs font-semibold" style={{ color: '#B8860B' }}>Arabia</span>
+          </span>
         </Link>
 
         <div className="flex flex-1 items-center justify-end space-x-2 md:space-x-4">

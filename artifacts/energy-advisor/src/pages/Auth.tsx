@@ -131,7 +131,7 @@ export default function Auth() {
       <div className="z-10 w-full max-w-md px-4">
         <div className="flex flex-col items-center mb-8">
           <img
-            src="/logo.png"
+            src="/logo-icon.png"
             alt="EcoPilot Arabia"
             className="h-28 w-auto object-contain mb-2 drop-shadow-xl"
           />
