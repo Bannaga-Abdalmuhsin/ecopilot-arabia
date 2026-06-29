@@ -124,44 +124,44 @@ export default function Home() {
     <div className="flex-1 flex flex-col">
 
       {/* ── Hero ── */}
-      <section
-        className="relative overflow-hidden py-24 lg:py-32"
-        style={{
-          backgroundImage: "url('/hero-bg.png')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-        }}
-      >
-        {/* Subtle dark scrim so text stays legible */}
-        <div className="absolute inset-0 bg-black/10 pointer-events-none" />
+      <section className="relative overflow-hidden">
+        {/* Image at natural aspect ratio — no cropping */}
+        <img
+          src="/hero-bg.png"
+          alt=""
+          aria-hidden="true"
+          className="w-full block select-none pointer-events-none"
+        />
+        {/* Subtle scrim + content overlay */}
+        <div className="absolute inset-0 bg-black/10" />
+        <div className="absolute inset-0 flex items-center">
+          <div className="container mx-auto px-4 md:px-6 py-16">
+            <div className="max-w-3xl space-y-7">
+              {/* Feature pills */}
+              <div className="flex flex-wrap gap-2">
+                {features.map(({ icon: Icon, label }) => (
+                  <span key={label} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-white/10 border border-white/20 text-white/90 backdrop-blur-sm">
+                    <Icon className="h-3 w-3 text-[#E8C874]" />
+                    {label}
+                  </span>
+                ))}
+              </div>
 
-        <div className="container relative z-10 mx-auto px-4 md:px-6">
-          <div className="max-w-3xl space-y-7">
-            {/* Feature pills */}
-            <div className="flex flex-wrap gap-2">
-              {features.map(({ icon: Icon, label }) => (
-                <span key={label} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-white/10 border border-white/20 text-white/90 backdrop-blur-sm">
-                  <Icon className="h-3 w-3 text-[#E8C874]" />
-                  {label}
-                </span>
-              ))}
-            </div>
+              <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl text-white leading-[1.1]">
+                {t('home.hero.title')}{" "}
+                <br className="hidden sm:block" />
+                <span className="text-[#E8C874]">{t('home.hero.titleHighlight')}</span>
+              </h1>
 
-            <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl text-white leading-[1.1]">
-              {t('home.hero.title')}{" "}
-              <br className="hidden sm:block" />
-              <span className="text-[#E8C874]">{t('home.hero.titleHighlight')}</span>
-            </h1>
+              <p className="max-w-xl text-lg text-white/75 leading-relaxed">
+                {t('home.hero.subtitle')}
+              </p>
 
-            <p className="max-w-xl text-lg text-white/75 leading-relaxed">
-              {t('home.hero.subtitle')}
-            </p>
-
-            <div className="flex items-center gap-3 pt-2">
-              <div className="h-px flex-1 max-w-[60px] bg-gradient-to-r from-transparent to-[#C89B3C]/60" />
-              <span className="text-xs text-[#E8C874]/80 font-semibold tracking-widest uppercase">{t('home.hero.saudiVision')}</span>
-              <div className="h-px flex-1 max-w-[60px] bg-gradient-to-l from-transparent to-[#C89B3C]/60" />
+              <div className="flex items-center gap-3 pt-2">
+                <div className="h-px flex-1 max-w-[60px] bg-gradient-to-r from-transparent to-[#C89B3C]/60" />
+                <span className="text-xs text-[#E8C874]/80 font-semibold tracking-widest uppercase">{t('home.hero.saudiVision')}</span>
+                <div className="h-px flex-1 max-w-[60px] bg-gradient-to-l from-transparent to-[#C89B3C]/60" />
+              </div>
             </div>
           </div>
         </div>
