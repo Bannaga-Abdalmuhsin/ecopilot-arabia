@@ -124,13 +124,17 @@ export default function Home() {
     <div className="flex-1 flex flex-col">
 
       {/* ── Hero ── */}
-      <section className="relative overflow-hidden hero-gradient pattern-bg py-24 lg:py-32">
-        {/* Glowing orbs */}
-        <div className="absolute top-0 ltr:right-0 rtl:left-0 w-[500px] h-[500px] glow-gold opacity-40 pointer-events-none" />
-        <div className="absolute bottom-0 ltr:left-0 rtl:right-0 w-[400px] h-[400px] glow-green opacity-50 pointer-events-none" />
-        
-        {/* Pattern overlay */}
-        <div className="absolute inset-0 opacity-[0.03] pattern-bg pointer-events-none" />
+      <section
+        className="relative overflow-hidden py-24 lg:py-32"
+        style={{
+          backgroundImage: "url('/hero-bg.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
+        {/* Subtle dark scrim so text stays legible */}
+        <div className="absolute inset-0 bg-black/10 pointer-events-none" />
 
         <div className="container relative z-10 mx-auto px-4 md:px-6">
           <div className="max-w-3xl space-y-7">
