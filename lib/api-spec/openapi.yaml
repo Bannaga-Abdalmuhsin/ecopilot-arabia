@@ -3,13 +3,18 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: AI-Powered Energy Efficiency Advisor API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: assessments
+    description: Energy assessments
+  - name: chat
+    description: AI chat operations
+
 paths:
   /healthz:
     get:
@@ -24,6 +29,140 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /assessments:
+    get:
+      operationId: listAssessments
+      tags: [assessments]
+      summary: List all assessments
+      responses:
+        "200":
+          description: List of assessments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Assessment"
+
+    post:
+      operationId: createAssessment
+      tags: [assessments]
+      summary: Create a new energy assessment and get AI analysis
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AssessmentInput"
+      responses:
+        "201":
+          description: Assessment created with AI report
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssessmentWithReport"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: AI analysis failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /assessments/{id}:
+    get:
+      operationId: getAssessment
+      tags: [assessments]
+      summary: Get an assessment with its report
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Assessment with report
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssessmentWithReport"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /assessments/{id}/chat:
+    get:
+      operationId: getChatHistory
+      tags: [chat]
+      summary: Get chat message history for an assessment
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Chat message history
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ChatMessage"
+        "404":
+          description: Assessment not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+    post:
+      operationId: sendChatMessage
+      tags: [chat]
+      summary: Send a chat message and get AI response
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChatMessageInput"
+      responses:
+        "200":
+          description: AI response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChatMessage"
+        "404":
+          description: Assessment not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: AI response failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +173,212 @@ components:
       required:
         - status
 
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+
+    AssessmentInput:
+      type: object
+      required:
+        - buildingType
+        - areaM2
+        - monthlyBillSar
+        - acUnits
+        - lightingType
+        - buildingAge
+        - hasSolar
+        - hasSmartThermostat
+      properties:
+        buildingType:
+          type: string
+          enum: [residential, commercial]
+        areaM2:
+          type: number
+          description: Building area in square meters
+        monthlyBillSar:
+          type: number
+          description: Average monthly electricity bill in SAR
+        acUnits:
+          type: integer
+          description: Number of AC units
+        lightingType:
+          type: string
+          enum: [fluorescent, led, incandescent]
+        workingHours:
+          type: ["number", "null"]
+          description: Daily working/occupancy hours (commercial)
+        buildingAge:
+          type: integer
+          description: Building age in years
+        hasSolar:
+          type: boolean
+          description: Whether solar panels are installed
+        hasSmartThermostat:
+          type: boolean
+          description: Whether a smart thermostat is installed
+
+    Recommendation:
+      type: object
+      required:
+        - title
+        - savingsSar
+        - roiYears
+        - priorityStars
+        - rationale
+      properties:
+        title:
+          type: string
+        savingsSar:
+          type: number
+        roiYears:
+          type: number
+        priorityStars:
+          type: integer
+          minimum: 1
+          maximum: 5
+        rationale:
+          type: string
+
+    EnergyBreakdown:
+      type: object
+      required:
+        - hvac
+        - lighting
+        - other
+      properties:
+        hvac:
+          type: number
+        lighting:
+          type: number
+        other:
+          type: number
+
+    Report:
+      type: object
+      required:
+        - id
+        - assessmentId
+        - energyScore
+        - estimatedWastePct
+        - annualWasteSar
+        - executiveSummary
+        - recommendations
+        - carbonReductionTons
+        - treesEquivalent
+        - breakdown
+        - potentialSavingsSar
+        - createdAt
+      properties:
+        id:
+          type: integer
+        assessmentId:
+          type: integer
+        energyScore:
+          type: number
+          minimum: 0
+          maximum: 100
+        estimatedWastePct:
+          type: number
+        annualWasteSar:
+          type: number
+        potentialSavingsSar:
+          type: number
+        executiveSummary:
+          type: string
+        recommendations:
+          type: array
+          items:
+            $ref: "#/components/schemas/Recommendation"
+        carbonReductionTons:
+          type: number
+        treesEquivalent:
+          type: integer
+        breakdown:
+          $ref: "#/components/schemas/EnergyBreakdown"
+        createdAt:
+          type: string
+          format: date-time
+
+    Assessment:
+      type: object
+      required:
+        - id
+        - buildingType
+        - areaM2
+        - monthlyBillSar
+        - acUnits
+        - lightingType
+        - buildingAge
+        - hasSolar
+        - hasSmartThermostat
+        - createdAt
+      properties:
+        id:
+          type: integer
+        buildingType:
+          type: string
+        areaM2:
+          type: number
+        monthlyBillSar:
+          type: number
+        acUnits:
+          type: integer
+        lightingType:
+          type: string
+        workingHours:
+          type: ["number", "null"]
+        buildingAge:
+          type: integer
+        hasSolar:
+          type: boolean
+        hasSmartThermostat:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+
+    AssessmentWithReport:
+      type: object
+      required:
+        - assessment
+        - report
+      properties:
+        assessment:
+          $ref: "#/components/schemas/Assessment"
+        report:
+          $ref: "#/components/schemas/Report"
+
+    ChatMessage:
+      type: object
+      required:
+        - id
+        - assessmentId
+        - role
+        - content
+        - createdAt
+      properties:
+        id:
+          type: integer
+        assessmentId:
+          type: integer
+        role:
+          type: string
+          enum: [user, assistant]
+        content:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+
+    ChatMessageInput:
+      type: object
+      required:
+        - content
+      properties:
+        content:
+          type: string
+          minLength: 1

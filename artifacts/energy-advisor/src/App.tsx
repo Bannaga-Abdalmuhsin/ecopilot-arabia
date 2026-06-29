@@ -3,28 +3,19 @@ import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
 import { Route, Switch, Router as WouterRouter } from 'wouter';
+import { Navbar } from '@/components/layout/Navbar';
+import Home from '@/pages/Home';
+import Dashboard from '@/pages/Dashboard';
+import History from '@/pages/History';
 
 const queryClient = new QueryClient();
-
-function Home() {
-  return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gray-50">
-      <div className="text-center">
-        <h1 className="text-2xl font-bold text-gray-900">
-          Replit Agent is building...
-        </h1>
-        <p className="mt-2 text-sm text-gray-600">
-          Your app will appear here once it's ready.
-        </p>
-      </div>
-    </div>
-  );
-}
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
+      <Route path="/dashboard/:id" component={Dashboard} />
+      <Route path="/history" component={History} />
       <Route component={NotFound} />
     </Switch>
   );
@@ -35,7 +26,12 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}>
-          <Router />
+          <div className="min-h-[100dvh] flex flex-col bg-background">
+            <Navbar />
+            <main className="flex-1 flex flex-col relative">
+              <Router />
+            </main>
+          </div>
         </WouterRouter>
         <Toaster />
       </TooltipProvider>
