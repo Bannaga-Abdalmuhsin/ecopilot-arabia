@@ -32,9 +32,8 @@ export function Navbar() {
             alt="EcoPilot Arabia"
             className="h-12 w-12 object-contain flex-shrink-0"
           />
-          <span className="hidden sm:flex flex-col leading-tight">
-            <span className="text-base font-bold text-foreground tracking-tight">EcoPilot</span>
-            <span className="text-xs font-semibold" style={{ color: '#B8860B' }}>Arabia</span>
+          <span className="hidden sm:inline text-base font-bold tracking-tight">
+            <span className="text-foreground">EcoPilot </span><span style={{ color: '#B8860B' }}>Arabia</span>
           </span>
         </Link>
 
