@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
-import { Route, Switch, Router as WouterRouter, Redirect } from 'wouter';
+import { Route, Switch, Router as WouterRouter, Redirect, useLocation } from 'wouter';
 import { Navbar } from '@/components/layout/Navbar';
 import Home from '@/pages/Home';
 import Dashboard from '@/pages/Dashboard';
@@ -35,6 +35,25 @@ function LanguageDirectionSync() {
 
 const queryClient = new QueryClient();
 
+// After Google/OAuth redirect, the hash contains #access_token=...
+// Supabase JS processes it client-side, but Wouter can't match the resulting URL.
+// This component waits for the session to load then navigates to /.
+function OAuthCallbackHandler() {
+  const { user, loading } = useAuth();
+  const [, navigate] = useLocation();
+
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (!hash.includes('access_token')) return;
+    if (loading) return;
+    // Clean the hash from the URL silently
+    window.history.replaceState(null, '', window.location.pathname);
+    navigate('/');
+  }, [loading, user]);
+
+  return null;
+}
+
 // Redirect already-authenticated users away from /auth
 function AuthRoute() {
   const { user, loading } = useAuth();
@@ -56,13 +75,16 @@ function AuthRoute() {
 
 function Router() {
   return (
-    <Switch>
-      <Route path="/auth" component={AuthRoute} />
-      <Route path="/" component={Home} />
-      <Route path="/dashboard/:id" component={Dashboard} />
-      <Route path="/history" component={History} />
-      <Route component={NotFound} />
-    </Switch>
+    <>
+      <OAuthCallbackHandler />
+      <Switch>
+        <Route path="/auth" component={AuthRoute} />
+        <Route path="/" component={Home} />
+        <Route path="/dashboard/:id" component={Dashboard} />
+        <Route path="/history" component={History} />
+        <Route component={NotFound} />
+      </Switch>
+    </>
   );
 }
 
