@@ -1,0 +1,14 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "QeAAwg3oyXywWcTF-8SvQ"
+uri = "file://attached_assets/generated_audio/ecopilot_bg_music.mp3"
+type = "audio"
+title = "ecopilot_bg_music"
+
+[[outputs]]
+id = "VYjwBlCBjdLhgoPUUWfQF"
+uri = "file://attached_assets/generated_audio/ecopilot_narration.mp3"
+type = "audio"
+title = "ecopilot_demo_narration"
