@@ -157,11 +157,6 @@ export default function Home() {
                 {t('home.hero.subtitle')}
               </p>
 
-              <div className="flex items-center gap-3 pt-2">
-                <div className="h-px flex-1 max-w-[60px] bg-gradient-to-r from-transparent to-[#C89B3C]/60" />
-                <span className="text-xs text-[#E8C874]/80 font-semibold tracking-widest uppercase">{t('home.hero.saudiVision')}</span>
-                <div className="h-px flex-1 max-w-[60px] bg-gradient-to-l from-transparent to-[#C89B3C]/60" />
-              </div>
             </div>
           </div>
         </div>
