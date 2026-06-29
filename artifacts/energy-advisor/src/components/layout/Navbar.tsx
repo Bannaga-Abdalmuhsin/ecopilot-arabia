@@ -27,7 +27,7 @@ export function Navbar() {
             <Leaf className="h-5 w-5" />
           </div>
           <span className="hidden sm:inline-block text-lg font-bold tracking-tight text-foreground">
-            Taqah <span className="text-muted-foreground font-medium">Advisor</span>
+            EcoPilot <span className="text-muted-foreground font-medium">Arabia</span>
           </span>
         </Link>
         <div className="flex flex-1 items-center justify-end space-x-4 md:space-x-6">

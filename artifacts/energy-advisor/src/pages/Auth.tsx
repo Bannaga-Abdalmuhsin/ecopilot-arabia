@@ -133,7 +133,7 @@ export default function Auth() {
           <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-primary-foreground mb-4">
             <Leaf className="h-7 w-7" />
           </div>
-          <h1 className="text-3xl font-bold tracking-tight">Taqah Advisor</h1>
+          <h1 className="text-3xl font-bold tracking-tight">EcoPilot Arabia</h1>
           <p className="text-muted mt-2 text-center text-sm">Intelligence for Energy Efficiency.</p>
         </div>
 
