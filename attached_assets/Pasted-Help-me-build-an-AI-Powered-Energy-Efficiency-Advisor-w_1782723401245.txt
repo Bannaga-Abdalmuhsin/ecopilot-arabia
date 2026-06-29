@@ -1,0 +1,75 @@
+Help me build an "AI-Powered Energy Efficiency Advisor" web application within a 7-day hackathon scope. 
+
+Follow this exact tech stack, feature set, and layout architecture. Build it modularly, starting with the backend API and database schema, followed by the frontend components.
+
+### 1. Tech Stack
+- Frontend: React (Vite), Tailwind CSS, shadcn/ui components
+- Data Visualization: Recharts
+- Backend: Python (FastAPI)
+- Database & Auth: Supabase (Use Mock/Local state first, then hook up Supabase)
+- AI Integration: OpenAI API (or Anthropic) using structured outputs (JSON mode)
+- PDF Generation: jsPDF (Frontend) or ReportLab (Backend)
+
+### 2. Database Schema (Supabase)
+Create tables for:
+- users (id, email, created_at)
+- assessments (id, user_id, building_type, area_m2, monthly_bill, ac_units, lighting_type, working_hours, building_age, has_solar, has_smart_thermostat, created_at)
+- reports (id, assessment_id, energy_score, estimated_waste_pct, annual_waste_sar, executive_summary, recommendations_json, carbon_reduction_tons, created_at)
+- chat_messages (id, assessment_id, role, content, created_at)
+
+### 3. Application Structure & UI Flow
+Build a clean, modern single-page dashboard app with 3 main views:
+
+#### View 1: Landing Page & Input Questionnaire
+A sleek, conversion-focused landing page with the tagline: "Reduce energy consumption, lower costs, and receive personalized AI recommendations in under one minute."
+- A multi-step form collecting:
+  - Building Type (Residential / Commercial)
+  - Area in m²
+  - Average Monthly Electricity Bill (in SAR)
+  - Number of AC Units
+  - Lighting Type (Fluorescent / LED / Incandescent)
+  - Working Hours (for commercial) or Occupancy
+  - Building Age (Years)
+  - Solar Installed? (Yes/No)
+  - Smart Thermostat? (Yes/No)
+
+#### View 2: Interactive Dashboard
+Once submitted, display an interactive dashboard with the following components:
+- **Top Metric Cards:**
+  - Overall Energy Score (0-100 dial or progress circle)
+  - Estimated Annual Waste (Percentage and SAR value)
+  - Potential Annual Savings (SAR)
+  - Carbon Footprint Reduction (Tons of CO₂/year + "equivalent to X trees planted" metric)
+- **Charts Section (Recharts):**
+  - Cost Breakdown (Pie chart: HVAC vs. Lighting vs. Appliances)
+  - Saving Potential (Bar chart: Current vs. Optimized spending)
+- **AI Executive Summary Card:** A professional markdown paragraph summarizing the building's current state and biggest optimization vectors (focusing heavily on HVAC/cooling for the Saudi market context).
+
+#### View 3: AI Recommendation Engine & Features
+- **Recommendations Table/List:** Ranks actions by ROI. Each card should show:
+  - Recommendation title (e.g., "Replace fluorescent lights with LED")
+  - Estimated Saving (SAR/year)
+  - ROI / Payback period (e.g., 8 months, 2.1 years)
+  - Priority Level (1-5 Stars)
+- **AI Chat Sidebar/Widget:** A chatbot contextualized with the report data. The user can ask things like "Why is my bill so high in summer?" and the AI responds using the assessment data.
+- **Export Action:** A button to generate and download a beautifully formatted PDF report of the dashboard results.
+
+### 4. AI Prompt Engineering & Backend Core
+Create a FastAPI endpoint `/api/assess` that takes the form input, sends a system prompt to the LLM acting as a "Certified Energy Consultant", and demands a strict JSON response matching this schema:
+{
+  "energy_score": number,
+  "estimated_waste_pct": number,
+  "annual_waste_sar": number,
+  "executive_summary": "string",
+  "carbon_reduction_tons": number,
+  "trees_equivalent": number,
+  "recommendations": [
+    { "title": "string", "savings_sar": number, "roi_years": number, "priority_stars": number, "rationale": "string" }
+  ],
+  "breakdown": { "hvac": number, "lighting": number, "other": number }
+}
+
+### Next Steps:
+1. Initialize the FastAPI backend and structure the openAI API call with mock JSON fallback if keys are missing.
+2. Build the Vite React frontend with Tailwind and shadcn/ui basic layout.
+3. Connect the frontend form to the backend endpoint.
